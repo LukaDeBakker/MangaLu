@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Hangfire;
 using Hangfire.SqlServer;
 using System;
+using MangaLuAPI.MangaDex.Scraper;
 
 namespace MangaLuAPI
 {
@@ -48,6 +49,8 @@ namespace MangaLuAPI
                 }));
 
             services.AddHangfireServer();
+
+            RecurringJob.AddOrUpdate<IScraperJob>(x => x.Run(), Cron.Daily);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
