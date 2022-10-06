@@ -8,6 +8,7 @@ using Hangfire;
 using Hangfire.SqlServer;
 using System;
 using MangaLuAPI.MangaDex.Scraper;
+using MangaLuAPI.MangaDex.Repositories;
 
 namespace MangaLuAPI
 {
@@ -47,6 +48,12 @@ namespace MangaLuAPI
                     UseRecommendedIsolationLevel = true,
                     DisableGlobalLocks = true
                 }));
+
+            JobStorage.Current = new SqlServerStorage(Configuration.GetConnectionString("HangfireConnection"));
+
+            services.AddTransient<IMangaDexSettings, MangaDexSettings>();
+            services.AddTransient<IMangaDexClient, MangaDexClient>();
+            services.AddTransient<IScraperJob, ScraperJob>();
 
             services.AddHangfireServer();
 

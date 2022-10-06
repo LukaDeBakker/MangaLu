@@ -15,9 +15,9 @@ namespace MangaLuAPI.MangaDex.Repositories
         private IMangaDexSettings MangaDexSettings { get; }
         public RestClient RestClient { get; }
 
-        public RestResponse<MangaDexLoginResponse> Authorize()
+        public string Authorize()
         {
-            var login = new RestRequest($"/auth/v2/login", Method.Post);
+            var login = new RestRequest($"/auth/login", Method.Post);
 
             var loginModel = new MangaDexLoginRequest 
             {
@@ -28,11 +28,11 @@ namespace MangaLuAPI.MangaDex.Repositories
             login.AddJsonBody(loginModel);
 
             var result = RestClient.Execute<MangaDexLoginResponse>(login);
-            var accessToken = result.Data.Token.AccessToken;
+            var accessToken = result.Data.Token.Session;
 
             RestClient.AddDefaultHeader("Authorization", $"Bearer {accessToken}");
 
-            return result;
+            return accessToken;
         }
     }
 }

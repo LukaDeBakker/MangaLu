@@ -4,8 +4,7 @@ namespace MangaLuAPI.MangaDex.Models
 {
     public class MangaDexLoginToken
     {
-        [JsonProperty("token")]
-        public string AccessToken { get; set; }
+        public string Session { get; set; }
         public string Refresh { get; set; }
     }
 }
