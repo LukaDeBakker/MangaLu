@@ -1,6 +1,10 @@
 ﻿using MangaLuAPI.MangaDex.Models;
+using Newtonsoft.Json;
 using RestSharp;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace MangaLuAPI.MangaDex.Repositories
 {
@@ -28,11 +32,32 @@ namespace MangaLuAPI.MangaDex.Repositories
             login.AddJsonBody(loginModel);
 
             var result = RestClient.Execute<MangaDexLoginResponse>(login);
+
+            if (!result.IsSuccessful)
+            {
+                return null;
+            }
             var accessToken = result.Data.Token.Session;
 
             RestClient.AddDefaultHeader("Authorization", $"Bearer {accessToken}");
 
             return accessToken;
+        }
+
+        public void RequestStatus()
+        {
+            var returnValue = new List<string>();
+
+            var status = new RestRequest($"/manga/status", Method.Get);
+
+            var result = RestClient.Execute<MangaDexStatusResponse>(status);
+
+            var mangaIds = JsonConvert.DeserializeObject<Dictionary<string, string>>(result.Data.statuses.ToString().Trim());
+
+            foreach (var id in mangaIds.keys)
+            {
+                returnValue.Add(id);
+            }
         }
     }
 }

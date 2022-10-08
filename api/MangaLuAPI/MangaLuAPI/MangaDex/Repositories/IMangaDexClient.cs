@@ -7,5 +7,6 @@ namespace MangaLuAPI.MangaDex.Repositories
         RestClient RestClient { get; }
 
         public string Authorize();
+        public void RequestStatus();
     }
 }

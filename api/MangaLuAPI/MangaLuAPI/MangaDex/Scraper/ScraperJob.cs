@@ -14,7 +14,14 @@ namespace MangaLuAPI.MangaDex.Scraper
 
         public void Run()
         {
-            var authData = MangaDexClient.Authorize();
+            var accesToken = MangaDexClient.Authorize();
+
+            if (!string.IsNullOrEmpty(accesToken))
+            {
+                return;
+            }
+
+            MangaDexClient.RequestStatus();
         }
     }
 }
