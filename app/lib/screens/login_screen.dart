@@ -1,5 +1,5 @@
 import 'dart:ui';
-
+import 'package:app/utils/validator.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -11,6 +11,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +34,31 @@ class _LoginScreenState extends State<LoginScreen> {
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20)),
+                child: SingleChildScrollView(
+                  child: Center(
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      const Center(
+                        child: Text(
+                          "Login",
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: size.height * 0.06),
+                      TextFormField(
+                        controller: emailController,
+                        validator: (value) {
+                          return Validator.validateEmail(value ?? "");
+                        },
+                      )
+                    ],
+                  )),
+                ),
               ),
             ),
           ),
