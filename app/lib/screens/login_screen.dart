@@ -12,6 +12,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  bool _showPassword = false;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +57,35 @@ class _LoginScreenState extends State<LoginScreen> {
                         validator: (value) {
                           return Validator.validateEmail(value ?? "");
                         },
-                      )
+                        decoration: InputDecoration(
+                            hintText: "Email",
+                            isDense: true,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10))),
+                      ),
+                      SizedBox(height: size.height * 0.03),
+                      TextFormField(
+                        obscureText: _showPassword,
+                        controller: passwordController,
+                        validator: (value) {
+                          return Validator.validatePassword(value ?? "");
+                        },
+                        decoration: InputDecoration(
+                            suffixIcon: GestureDetector(
+                              onTap: () {
+                                setState(() => _showPassword = !_showPassword);
+                              },
+                              child: Icon(
+                                  _showPassword
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.grey),
+                            ),
+                            hintText: "Password",
+                            isDense: true,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10))),
+                      ),
                     ],
                   )),
                 ),
