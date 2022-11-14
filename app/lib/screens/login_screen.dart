@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:app/utils/validator.dart';
 import 'package:flutter/material.dart';
+import 'package:app/mangaDex/api_client.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -13,7 +14,19 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final ApiClient _apiClient = ApiClient();
   bool _showPassword = false;
+
+  Future<void> login() async {
+    if (_formKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text('Logging in'),
+          backgroundColor: Colors.green.shade300));
+    }
+
+    dynamic loginData =
+        await _apiClient.Login(emailController.text, passwordController.text);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,21 +84,44 @@ class _LoginScreenState extends State<LoginScreen> {
                           return Validator.validatePassword(value ?? "");
                         },
                         decoration: InputDecoration(
-                            suffixIcon: GestureDetector(
-                              onTap: () {
-                                setState(() => _showPassword = !_showPassword);
-                              },
-                              child: Icon(
-                                  _showPassword
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                  color: Colors.grey),
-                            ),
-                            hintText: "Password",
-                            isDense: true,
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10))),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() => _showPassword = !_showPassword);
+                            },
+                            child: Icon(
+                                _showPassword
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.grey),
+                          ),
+                          hintText: "Password",
+                          isDense: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
                       ),
+                      SizedBox(height: size.height * 0.04),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                              child: ElevatedButton(
+                            onPressed: login,
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.indigo,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 40, vertical: 15)),
+                            child: const Text("Login",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          ))
+                        ],
+                      )
                     ],
                   )),
                 ),
